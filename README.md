@@ -1,3 +1,9 @@
+# !!!Inference
+First, set up the repo as described below. Then you can use "inference_wraper.py" to see whether given a path of a wav file, it is fake or human. You can use different models by:
+- download all the models [here](https://drive.google.com/drive/folders/1YWMC64MW4HjGUX1fnBaMkMIGgAJde9Ch?usp=sharing)
+- unzip them and put the folder "all_models" in the main path "./"
+- use the config file inside them and give its path as the arg --config (the you should add "all_models/" at the beginning of checkpoint path of each config file e.g "all_models/lfcc_lcnn/weights.pth")
+
 # Improved DeepFake Detection Using Whisper Features
 
 The following repository contains code for our paper called "Improved DeepFake Detection Using Whisper Features".
