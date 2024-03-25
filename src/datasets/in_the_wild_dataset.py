@@ -14,13 +14,16 @@ class InTheWildDataset(SimpleAudioFakeDataset):
         transform=None,
         seed=None,
         partition_ratio=(0.7, 0.15),
-        split_strategy="random"
+        split_strategy="random",
+        amount_to_use=None,
     ):
         super().__init__(subset=subset, transform=transform)
         self.path = path
         self.read_samples()
         self.partition_ratio = partition_ratio
         self.seed = seed
+        if amount_to_use!=None:
+            self.samples = self.samples.iloc[:amount_to_use]
 
 
     def read_samples(self):

@@ -3,6 +3,7 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 import sys
+import os
 
 import torch
 import yaml
@@ -13,6 +14,9 @@ from src import metrics, commons
 from src.models import models
 from src.datasets.base_dataset import SimpleAudioFakeDataset
 from src.datasets.in_the_wild_dataset import InTheWildDataset
+from src.datasets.asvspoof_dataset import ASVSpoof2019DatasetOriginal #TODO: Use
+from src.datasets.deepfake_asvspoof_dataset import DeepFakeASVSpoofDataset #TODO: Use
+#TODO: Add our dataset here for eval
 
 
 def get_dataset(
@@ -22,6 +26,7 @@ def get_dataset(
     data_val = InTheWildDataset(
         subset="foo",
         path=datasets_paths[0],
+        amount_to_use=amount_to_use,
     )
     return data_val
 
@@ -32,7 +37,7 @@ def evaluate_nn(
     model_config: Dict,
     device: str,
     amount_to_use: Optional[int] = None,
-    batch_size: int = 8,
+    batch_size: int = 32,
 ):
     logging.info("Loading data...")
     model_name, model_parameters = model_config["name"], model_config["parameters"]
@@ -114,8 +119,11 @@ def evaluate_nn(
     f1_label = f"eval/f1_score"
     auc_label = f"eval/auc"
 
-    logging.info(
-        f"{eer_label}: {eer:.4f}, {accuracy_label}: {eval_accuracy:.4f}, {precision_label}: {precision:.4f}, {recall_label}: {recall:.4f}, {f1_label}: {f1_score:.4f}, {auc_label}: {auc_score:.4f}"
+    # logging.info(
+    #     f"{eer_label}: {eer:.4f}, {accuracy_label}: {eval_accuracy:.4f}, {precision_label}: {precision:.4f}, {recall_label}: {recall:.4f}, {f1_label}: {f1_score:.4f}, {auc_label}: {auc_score:.4f}"
+    # )
+    print(
+        f"{os.path.split(model_paths)[0].split('/')[-1]} -- {eer_label}: {eer:.4f}, {accuracy_label}: {eval_accuracy:.4f}, {precision_label}: {precision:.4f}, {recall_label}: {recall:.4f}, {f1_label}: {f1_score:.4f}, {auc_label}: {auc_score:.4f}"
     )
 
 
@@ -156,7 +164,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
 
     # If assigned as None, then it won't be taken into account
-    IN_THE_WILD_DATASET_PATH = "../datasets/release_in_the_wild"
+    IN_THE_WILD_DATASET_PATH = "../in-the-wild-dataset/release_in_the_wild"
 
     parser.add_argument(
         "--in_the_wild_path", type=str, default=IN_THE_WILD_DATASET_PATH
